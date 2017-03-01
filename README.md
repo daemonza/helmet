@@ -2,8 +2,8 @@
 
 Helmet is simple and easy to use Helm(https://helm.sh) repository, useful
 when you want to setup a private Helm repository and be able to easy
-upload new `helm charts`. Example Jenkins can easily push new charts to Helmet
-using the Helmet API.
+upload new `helm charts`. Typically deployed to the same Kubernetes cluster in which you 
+want to deploy helm charts into. 
 
 Example of uploading a chart to a locally running Helmet.
 
@@ -15,7 +15,7 @@ After the update you can confirm that the Helm index.yaml got created
 by running 
 
 ```
-curl http://127.0.0.1:1323/index.yaml
+curl http://127.0.0.1:1323/charts/index.yaml
 ```
 
 Output should look similar to :

@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Helmet is a simple helm repository
+name: helmet-chart
+version: 0.0.1

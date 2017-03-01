@@ -1,0 +1,27 @@
+# Default values for helmet-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+image:
+  repository: daemonza/helmet
+  tag: latest
+  pullPolicy: Always
+  args:
+    - /opt/helmet
+    - -stderrthreshold=INFO
+    - -host=0.0.0.0
+    - -port=1323
+    - -url=http://helmet:1323/charts/
+service:
+  name: helmet
+  type: NodePort
+  externalPort: 1323
+  internalPort: 1323
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+

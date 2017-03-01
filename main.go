@@ -16,14 +16,16 @@ import (
 )
 
 var (
-	url  *string
-	host *string
-	port *string
+	url    *string
+	host   *string
+	port   *string
+	charts *string
 )
 
 // helm is a wrapper function to execute the helm command on the
 // shell.
 func helm(arguments []string) (output []byte, err error) {
+
 	command := "helm"
 	cmd := exec.Command(command, arguments...)
 
@@ -40,8 +42,15 @@ func helm(arguments []string) (output []byte, err error) {
 
 // initRepo initialize a helm repository generating a index.yaml file
 func initRepo() error {
+	// TODO check if directory is there and create
+	// if needed
+	err := os.MkdirAll("./charts", 0777)
+	if err != nil {
+		glog.Error(err.Error())
+		return err
+	}
 	// generate helm index
-	_, err := helm([]string{"repo", "index", "./charts/", "--url", *url})
+	_, err = helm([]string{"repo", "index", "./charts/", "--url", *url})
 	if err != nil {
 		glog.Error(err.Error())
 		return err
@@ -55,6 +64,7 @@ func upload(c echo.Context) error {
 	// TODO - do some sanitising on chartName
 
 	glog.Info("uploading " + chartName)
+	os.Stat(*charts)
 	f, err := os.Create("charts/" + chartName)
 	defer f.Close()
 	if err != nil {
@@ -86,11 +96,13 @@ func repo(c echo.Context) error {
 }
 
 func init() {
+
 	// Get command line options
 	// repoURL is also the url that get's used to generate the helm repo index file
-	url = flag.String("url", "http://localhost:1323/", "The URL where Helmet runs as a repository")
-	host = flag.String("host", "127.0.0.1", "The address that Helmet listens on")
+	url = flag.String("url", "http://localhost:1323/charts/", "The URL where Helmet runs as a repository")
+	host = flag.String("host", "0.0.0.0", "The address that Helmet listens on")
 	port = flag.String("port", "1323", "The port that Helmet listens on")
+	charts = flag.String("charts", "./charts", "Directory where charts get's stored")
 	flag.Parse()
 
 	// initialize the helm repository on startup.
@@ -112,7 +124,7 @@ func main() {
 	e.PUT("/upload/:chartName", upload)
 
 	// Serve the charts directory
-	e.GET("/*", repo)
+	e.GET("/charts/*", repo)
 
 	// Start server
 	e.Logger.Fatal(e.Start(*host + ":" + *port))

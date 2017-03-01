@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1 
+kind: Deployment 
+metadata:
+  name: helmet 
+  namespace: default 
+  labels:
+    helmet: repo 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      helmet: repo 
+  template:
+    metadata:
+      labels:
+        helmet: repo 
+    spec:
+      containers:
+        - name: helmet 
+          image: daemonza/helmet:latest
+          imagePullPolicy: Always 
+          args:
+            - /opt/helmet 
+            - -stderrthreshold=INFO
+            - -host=0.0.0.0
+            - -port=1323
+            - -url=http://helmet:1323/charts/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: helmet 
+  namespace: default 
+  labels:
+    helmet: repo 
+spec:
+  type: NodePort
+  selector:
+    helmet: repo 
+  ports:
+  - name: http
+    protocol: TCP
+    port: 1323 
+    targetPort: 1323 
+
