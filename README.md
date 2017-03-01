@@ -34,3 +34,7 @@ entries:
     version: 0.1.0
 generated: 2017-02-24T12:15:09.994657561+01:00
 ```
+
+#### Dependencies
+
+* helm (https://helm.sh) needs to be in your $PATH
