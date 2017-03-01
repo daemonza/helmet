@@ -14,5 +14,5 @@
   kubectl port-forward $POD_NAME 8080:{{ .Values.service.externalPort }}
 {{- end }}
 
-2. Internally Helmet listen on http://helmet:{{.Values.service.externalPort}}
+2. Internally Helmet listen on http://{{ template "fullname" . }}:{{ .Values.service.externalPort }}
 3. Find out how to use Helmet at https://github.com/daemonza/helmet

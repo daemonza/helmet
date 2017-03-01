@@ -6,12 +6,6 @@ image:
   repository: daemonza/helmet
   tag: latest
   pullPolicy: Always
-  args:
-    - /opt/helmet
-    - -stderrthreshold=INFO
-    - -host=0.0.0.0
-    - -port=1323
-    - -url=http://helmet:1323/charts/
 service:
   name: helmet
   type: NodePort
